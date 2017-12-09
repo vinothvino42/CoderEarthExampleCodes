@@ -7,19 +7,38 @@
 //
 
 import UIKit
+import ContactsUI
 
-class ViewController: UIViewController {
-
+class ViewController: UIViewController, CNContactPickerDelegate {
+    
+    @IBOutlet weak var numberLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    @IBAction func showContacts(_ sender: Any) {
+        
+        let contactPicker = CNContactPickerViewController()
+        contactPicker.delegate = self
+        present(contactPicker, animated: true, completion: nil)
     }
-
-
+    
+    func contactPicker(_ picker: CNContactPickerViewController, didSelect contacts: [CNContact]) {
+        
+        contacts.forEach { contact in
+            for data in contact.phoneNumbers {
+                let phoneNumber = data.value
+                print("Your phone number is \(phoneNumber)")
+                numberLabel.text = phoneNumber.stringValue
+            }
+        }
+    }
+    
+    func contactPickerDidCancel(_ picker: CNContactPickerViewController) {
+        
+        print("Cancelled the contact picker view controller")
+    }
 }
 
